@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#closeButton {
+    animation: appearRotating 0.2s ease-in-out;
+  }
+  
+  @keyframes appearRotating {
+    0% {
+      opacity: 0;
+      transform: rotate(-45deg);
+    }
+  
+    80% {
+      opacity: 1;
+    }
+  
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  
