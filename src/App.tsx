@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Consultas from "./pages/Consultas"; 
 import Consulta from "./pages/consulta/index"; 
 import Home from "./pages/index"; 
 import Custom404 from "./pages/404"; // Importa tu componente 404
@@ -12,7 +11,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/consultas" element={<Consultas />} />
         <Route path="/legal/politica-de-tratamiento-de-datos" element={<PrivacyPolicies />} />
         <Route path="/legal/autorizacion-tratamiento-de-datos" element={<DataProcessingAuthorization />} />
         <Route path="/consulta" element={<Consulta />} />

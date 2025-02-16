@@ -21,7 +21,7 @@ function Consultas() {
     const fetchConsultas = async () => {
       try {
         // Si has configurado el proxy, puedes usar "/api/consultas" directamente.
-        const response = await fetch("http://localhost:3000/api/consultas");
+        const response = await fetch("https://sotoargel-asociados.onrender.com/api/consultas");
 
         if (!response.ok) throw new Error("Error en la solicitud");
         const data = await response.json();

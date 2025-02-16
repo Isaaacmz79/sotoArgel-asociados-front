@@ -87,7 +87,7 @@ const ConsultaForm: React.FC = () => {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/consultas", {
+      const response = await fetch("https://sotoargel-asociados.onrender.com/api/consultas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
