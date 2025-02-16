@@ -25,7 +25,9 @@ export const Header = () => {
         <Link href="/">
           <Logo />
         </Link>
-        <LogoAndres />
+        <Link href="/">
+          <LogoAndres />
+        </Link>
         <MenuMobile handleMenu={handleMenu} isOpen={isOpen} />
         <DesktopNav />
       </header>

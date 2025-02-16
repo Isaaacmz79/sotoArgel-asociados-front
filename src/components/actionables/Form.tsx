@@ -39,8 +39,7 @@ const ConsultaForm: React.FC = () => {
     if (!formData.fullName.trim()) {
       newErrors.fullName = "El nombre completo es obligatorio";
     } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{3,60}$/.test(formData.fullName)) {
-      newErrors.fullName =
-        "Debe contener entre 3 y 60 letras (sin números)";
+      newErrors.fullName = "Debe contener entre 3 y 60 letras (sin números)";
     }
 
     // Validación para Documento de identidad
@@ -308,6 +307,12 @@ const ConsultaForm: React.FC = () => {
           }`}
           placeholder={`Ejemplo:\n1. El 1 de enero de 2021, me despidieron de mi trabajo.\n2. Al día siguiente, me enteré que mi esposa estaba embarazada.`}
         />
+        {/* Advertencia para mejorar la asesoría */}
+        <p className="text-blue-600 text-sm mt-2 italic">
+          Recuerda que la asesoría se brindará únicamente con base en la
+          información que nos suministres. Entre más detalles proporciones sobre
+          tu caso, más precisa y efectiva será nuestra orientación legal.
+        </p>
         {errors.problemDescription && (
           <span className={errorClassName}>{errors.problemDescription}</span>
         )}
