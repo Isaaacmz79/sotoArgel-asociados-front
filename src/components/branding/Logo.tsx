@@ -8,7 +8,7 @@ export const Logo = () => {
       about="Logo de Alianza Jurídica y Servicio Integrales S.A.S"
       width={200}
       height={100}
-      className="h-8 md:h-14 w-auto object-contain"
+      className="h-10 md:h-auto w-auto"
     />
   );
 };
