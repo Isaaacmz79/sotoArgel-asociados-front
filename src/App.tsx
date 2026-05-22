@@ -4,6 +4,7 @@ import Home from "./pages/index";
 import Custom404 from "./pages/404"; // Importa tu componente 404
 import PrivacyPolicies from "./pages/legal/politica-de-tratamiento-de-datos/index";
 import DataProcessingAuthorization from "./pages/legal/autorizacion-tratamiento-de-datos/index";
+import IAPage from "./pages/ia/index";
 import "./styles/globals.css";
 
 function App() {
@@ -14,6 +15,8 @@ function App() {
         <Route path="/legal/politica-de-tratamiento-de-datos" element={<PrivacyPolicies />} />
         <Route path="/legal/autorizacion-tratamiento-de-datos" element={<DataProcessingAuthorization />} />
         <Route path="/consulta" element={<Consulta />} />
+        {/* Ruta interna — acceso solo por URL */}
+        <Route path="/ia" element={<IAPage />} />
         {/* Ruta para páginas no encontradas */}
         <Route path="*" element={<Custom404 />} />
       </Routes>
