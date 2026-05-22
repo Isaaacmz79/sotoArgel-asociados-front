@@ -1,13 +1,4 @@
-import { Html, Head, Main, NextScript } from "next/document";
-
+// Archivo legacy — no utilizado en la app Vite+React Router
 export default function Document() {
-  return (
-    <Html lang="en">
-      <Head />
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+  return null;
 }

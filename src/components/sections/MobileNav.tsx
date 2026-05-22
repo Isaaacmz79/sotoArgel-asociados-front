@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { WhatsAppContact } from "../branding/WhatsAppContact";
 
 import { ConsultaGratisButtonSm } from "../buttons/ConsultaGratisButtonSm";
@@ -24,7 +24,7 @@ export const MobileNav = ({ handleMenu }: MenuMobileProps) => {
     <nav className="absolute z-50  flex flex-col items-center justify-center gap-5 w-full p-5 bg-white border-t-2 border-bluePrimary shadow-md">
       <ul className="flex flex-col items-center justify-center gap-5 text-customGray">
         <li onClick={handleMenu}>
-          <Link href="/">Inicio</Link>
+          <Link to="/">Inicio</Link>
         </li>
         <li onClick={handleMenu}>
           <SN_ButtonOrLink mobile={true} />

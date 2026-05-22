@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { ComponentWithCustomClassName } from "../sections/types/index";
 
 interface LinkToInquiryProps extends ComponentWithCustomClassName {
@@ -10,7 +10,7 @@ export const LinkToInquiry = ({
   customClassName,
 }: LinkToInquiryProps) => {
   return (
-    <Link className="m-auto" href="/consulta">
+    <Link className="m-auto" to="/consulta">
       <p className={`text-center ${customClassName}`}>{text}</p>
     </Link>
   );

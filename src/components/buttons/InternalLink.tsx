@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 interface InternalLinkProps {
   href: string;
@@ -12,7 +12,7 @@ export const InternalLink = ({
   customClassName,
 }: InternalLinkProps) => {
   return (
-    <Link href={href}>
+    <Link to={href}>
       <span className={`text-blue-400 ${customClassName}`}>{children}</span>
     </Link>
   );

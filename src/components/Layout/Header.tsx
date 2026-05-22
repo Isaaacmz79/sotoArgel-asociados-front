@@ -4,7 +4,7 @@ import { LogoAndres } from "../branding/LogoAndres";
 import { useState } from "react";
 import { MobileNav } from "../sections/MobileNav";
 import { DesktopNav } from "../sections/DesktopNav";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,10 +22,10 @@ export const Header = () => {
       md:h-28 md:py-7 md:px-20 shadow-md
       "
       >
-        <Link href="/">
+        <Link to="/">
           <Logo />
         </Link>
-        <Link href="/">
+        <Link to="/">
           <LogoAndres />
         </Link>
         <MenuMobile handleMenu={handleMenu} isOpen={isOpen} />

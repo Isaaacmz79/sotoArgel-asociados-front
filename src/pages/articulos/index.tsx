@@ -1,33 +1,7 @@
-import Layout from "../../components/Layout/Layout"; 
-import { getAllArticles } from "../../lib/mdxProcessor";
-import { ArticleData } from "../../types/lib/index";
-import Link from "next/link";
-
-// Definición de la interface para las props del componente
-interface PostsPagesProps {
-  articles: ArticleData[];
+// Página de artículos — pendiente de implementación con Vite
+export default function PostsPages() {
+  return null;
 }
-
-export default function PostsPages({ articles }: PostsPagesProps) {
-  return (
-    <Layout headDescription="Articles page" headTitle="Articles">
-      <h1>Articles</h1>
-      <ul>
-        {articles.map((article, index) => {
-          // Se asume que cada artículo tiene 'slug' y 'title'
-          const slug = article.slug as string;
-          const title = article.title as string;
-          return (
-            <li key={index}>
-              <Link href={`/blog/${slug}`}>
-                <a>{title}</a>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </Layout>
-  );
 }
 
 export async function getStaticProps() {

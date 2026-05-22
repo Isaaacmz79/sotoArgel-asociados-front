@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { MailContactWhite } from "../branding/MailContac";
 import { WhatsAppContactWhite } from "../branding/WhatsAppContact";
 import { AddressWhite } from "../branding/Address";
@@ -17,10 +17,10 @@ export default function Footer() {
       <div className="w-full flex flex-col items-start md:items-center border-t py-5 gap-2 pt-10">
         <h1 className="font-bold text-left md:text-center">Legal</h1>
         <ul className="flex flex-col gap-2 text-left">
-          <Link href="/legal/politica-de-tratamiento-de-datos">
+          <Link to="/legal/politica-de-tratamiento-de-datos">
             <li>Política de tratamiento de datos personales</li>
           </Link>
-          <Link href="/legal/autorizacion-tratamiento-de-datos">
+          <Link to="/legal/autorizacion-tratamiento-de-datos">
             <li>Autorización tratamiento de datos</li>
           </Link>
         </ul>

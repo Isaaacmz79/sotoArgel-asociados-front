@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { InternalLink } from "../buttons/InternalLink";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 
 // Interface para tipos de errores
@@ -366,7 +366,7 @@ const ConsultaForm: React.FC = () => {
         Al enviar el formulario estas aceptando nuestra{" "}
         <Link
           className="text-blue-400"
-          href="legal/politica-de-tratamiento-de-datos"
+          to="legal/politica-de-tratamiento-de-datos"
         >
           política de tratamiento de datos
         </Link>

@@ -1,4 +1,4 @@
-import Head from "next/head";
+import { useEffect } from "react";
 
 import { LayoutProps } from "../../types/components";
 import { Header } from "./Header";
@@ -7,20 +7,16 @@ import { WhatsAppFloatingButton } from "../buttons/WhatsAppFloatingButton";
 
 export default function Layout({
   headTitle,
-  headDescription,
+  headDescription: _headDescription,
   children,
-  keywords,
+  keywords: _keywords,
 }: LayoutProps) {
+  useEffect(() => {
+    document.title = headTitle;
+  }, [headTitle]);
+
   return (
     <div className="flex flex-col min-w-screen min-h-screen scroll-smooth">
-      <Head>
-        <title>{headTitle}</title>
-        <meta name="description" content={headDescription} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index,follow" />
-        {keywords && <meta name="keywords" content={keywords} />}
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Header />
       <main className="h-full mt-16 md:mt-28">
         {children} <WhatsAppFloatingButton />

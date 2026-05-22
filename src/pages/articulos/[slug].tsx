@@ -1,10 +1,7 @@
-import "highlight.js/styles/atom-one-dark-reasonable.css";
-import rehypeSlug from "rehype-slug";
-import rehypeHighlight from "rehype-highlight";
-import rehypeCodeTitles from "rehype-code-titles";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { serialize } from "next-mdx-remote/serialize";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+// Página de artículo individual — pendiente de implementación con Vite
+export default function Blog() {
+  return null;
+}
 
 import { getSlug, getArticleFromSlug } from "../../lib/mdxProcessor";
 import Container5xl from "../../components/Layout/Container5xl";

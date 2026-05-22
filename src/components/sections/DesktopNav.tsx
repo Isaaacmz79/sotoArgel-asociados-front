@@ -1,6 +1,6 @@
 
 import { ConsultaGratisButtonSm } from "../buttons/ConsultaGratisButtonSm";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { SN_ButtonOrLink } from "../buttons/SN_ButtonOrLink";
 import { S_ButtonOrLink } from "../buttons/S_ButtonOrLink";
 
@@ -11,7 +11,7 @@ export const DesktopNav = () => {
       <div className="flex items-center gap-5 max-w-fit ">
         <ul className="flex items-center gap-5 text-customGray">
           <li>
-            <Link href="/">Inicio</Link>
+            <Link to="/">Inicio</Link>
           </li>
           <li>
             <SN_ButtonOrLink />
