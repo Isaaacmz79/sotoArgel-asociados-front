@@ -6,12 +6,17 @@ import type {
   FeedbackRequest,
 } from "../types/ia";
 
-const BASE_URL = "http://54.236.240.63";
+// Cuando la app corre en HTTPS (Vercel) se usa el proxy relativo para evitar
+// Mixed Content. En HTTP (Docker / local) se llama directo al backend.
+const isSecure =
+  typeof window !== "undefined" && window.location.protocol === "https:";
+
+const API_BASE = isSecure ? "/legal-proxy" : "http://54.236.240.63/api";
 
 const ENDPOINTS = {
-  context: `${BASE_URL}/api/v1/advisor/context`,
-  recommend: `${BASE_URL}/api/v1/advisor/recommend`,
-  feedback: `${BASE_URL}/api/v1/advisor/feedback`,
+  context: `${API_BASE}/v1/advisor/context`,
+  recommend: `${API_BASE}/v1/advisor/recommend`,
+  feedback: `${API_BASE}/v1/advisor/feedback`,
 } as const;
 
 // ── Error parser ──────────────────────────────────────────────────────────────
