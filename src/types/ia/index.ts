@@ -90,3 +90,45 @@ export interface IASessionContext {
   contextCost: TokenCost | null;
   skipQuestions: boolean;
 }
+
+// ── Admin types ───────────────────────────────────────────────────────────────
+
+export interface AdminSession {
+  session_id: string;
+  consulta: string;
+  preguntas: string[];
+  recommendation_count: number;
+  feedback_count: number;
+  created_at: string;
+}
+
+export interface AdminRecommendation {
+  response_id: string;
+  session_id: string;
+  consulta: string;
+  respuestas: Record<string, string>;
+  tipo_situacion: string;
+  nivel_riesgo: string;
+  detalle: RecommendInfo;
+  created_at: string;
+}
+
+export interface SessionFeedback {
+  feedback_id: number;
+  response_id: string;
+  tipo: "like" | "dislike";
+  descripcion: string | null;
+  created_at: string;
+}
+
+export interface AdminFeedback {
+  feedback_id: number;
+  response_id: string;
+  tipo: "like" | "dislike";
+  descripcion: string | null;
+  consulta: string;
+  tipo_situacion: string;
+  nivel_riesgo: string;
+  detalle: RecommendInfo | null;
+  created_at: string;
+}

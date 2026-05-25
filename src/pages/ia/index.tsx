@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LoginIA from "../../components/sections/ia/LoginIA";
 import ConsultaStep from "../../components/sections/ia/ConsultaStep";
 import ContextStep from "../../components/sections/ia/ContextStep";
@@ -7,6 +8,7 @@ import { Logo } from "../../components/branding/Logo";
 import type { IASessionContext, IAStep, RecommendData } from "../../types/ia";
 
 const IAPage: React.FC = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState<IAStep>("login");
   const [ctx, setCtx] = useState<IASessionContext | null>(null);
   const [result, setResult] = useState<RecommendData | null>(null);
@@ -65,12 +67,26 @@ const IAPage: React.FC = () => {
             </span>
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          className="text-xs text-customGray border border-slate-200 rounded-lg px-3 py-1.5 hover:border-red-300 hover:text-red-600 transition-colors"
-        >
-          Cerrar sesión
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate("/ia/admin/history")}
+            className="text-xs text-customGray border border-slate-200 rounded-lg px-3 py-1.5 hover:border-bluePrimary hover:text-bluePrimary transition-colors"
+          >
+            Historial
+          </button>
+          <button
+            onClick={() => navigate("/ia/admin/feedbacks")}
+            className="text-xs text-customGray border border-slate-200 rounded-lg px-3 py-1.5 hover:border-bluePrimary hover:text-bluePrimary transition-colors"
+          >
+            Feedbacks
+          </button>
+          <button
+            onClick={handleLogout}
+            className="text-xs text-customGray border border-slate-200 rounded-lg px-3 py-1.5 hover:border-red-300 hover:text-red-600 transition-colors"
+          >
+            Cerrar sesión
+          </button>
+        </div>
       </header>
 
       {/* Contenido */}

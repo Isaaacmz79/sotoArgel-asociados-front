@@ -4,6 +4,10 @@ import type {
   RecommendRequest,
   RecommendResponse,
   FeedbackRequest,
+  AdminFeedback,
+  AdminSession,
+  AdminRecommendation,
+  SessionFeedback,
 } from "../types/ia";
 
 // Cuando la app corre en HTTPS (Vercel) se usa el proxy relativo para evitar
@@ -12,6 +16,8 @@ const isSecure =
   typeof window !== "undefined" && window.location.protocol === "https:";
 
 const API_BASE = isSecure ? "/legal-proxy" : "http://54.236.240.63/api";
+
+const ADMIN_BASE = `${API_BASE}/v1/admin`;
 
 const ENDPOINTS = {
   context: `${API_BASE}/v1/advisor/context`,
@@ -160,4 +166,61 @@ export async function postFeedback(
   } catch {
     return { error: "Error de red al enviar el feedback." };
   }
+}
+
+// ── Admin: helper fetch ───────────────────────────────────────────────────────
+
+async function adminFetch<T>(
+  url: string
+): Promise<{ data: T; error: null } | { data: null; error: string }> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`Error del servidor (${res.status})`);
+    }
+    const data = await res.json();
+    return { data: data as T, error: null };
+  } catch (e) {
+    return {
+      data: null,
+      error: e instanceof Error ? e.message : "Error desconocido.",
+    };
+  }
+}
+
+// ── Admin: Feedbacks ──────────────────────────────────────────────────────────
+
+export async function getAdminFeedbacks(
+  limit = 200
+): Promise<{ data: AdminFeedback[]; error: null } | { data: null; error: string }> {
+  return adminFetch<AdminFeedback[]>(`${ADMIN_BASE}/feedbacks?limit=${limit}`);
+}
+
+// ── Admin: History ────────────────────────────────────────────────────────────
+
+export async function getAdminHistory(
+  limit = 100,
+  offset = 0
+): Promise<{ data: AdminSession[]; error: null } | { data: null; error: string }> {
+  return adminFetch<AdminSession[]>(
+    `${ADMIN_BASE}/history?limit=${limit}&offset=${offset}`
+  );
+}
+
+// ── Admin: Session detail ─────────────────────────────────────────────────────
+
+export async function getSessionRecommendations(
+  sessionId: string
+): Promise<{ data: AdminRecommendation[]; error: null } | { data: null; error: string }> {
+  return adminFetch<AdminRecommendation[]>(
+    `${ADMIN_BASE}/history/${sessionId}/recommendations`
+  );
+}
+
+export async function getSessionFeedbacks(
+  sessionId: string
+): Promise<{ data: SessionFeedback[]; error: null } | { data: null; error: string }> {
+  return adminFetch<SessionFeedback[]>(
+    `${ADMIN_BASE}/history/${sessionId}/feedbacks`
+  );
 }
