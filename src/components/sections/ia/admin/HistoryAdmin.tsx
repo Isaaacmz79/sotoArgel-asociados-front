@@ -102,7 +102,14 @@ const HistoryAdmin: React.FC = () => {
 
       {!loading && sessions.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <table className="w-full text-sm border-collapse">
+          <table className="w-full text-sm border-collapse table-fixed">
+            <colgroup>
+              <col className="w-auto" />
+              <col style={{ width: "130px" }} />
+              <col style={{ width: "110px" }} />
+              <col style={{ width: "160px" }} />
+              <col style={{ width: "36px" }} />
+            </colgroup>
             <thead>
               <tr className="bg-bluePrimary text-white text-xs uppercase tracking-wider">
                 <th className="px-4 py-3 text-left font-semibold">Consulta</th>
@@ -120,8 +127,8 @@ const HistoryAdmin: React.FC = () => {
                     onClick={() => toggleSession(session.session_id)}
                     className="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
                   >
-                    <td className="px-4 py-3 max-w-sm">
-                      <p className="truncate text-gray-800">{session.consulta}</p>
+                    <td className="px-4 py-3">
+                      <p className="text-gray-800 leading-snug">{session.consulta}</p>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <span className="bg-blue-50 text-blueTertiary text-xs font-semibold border border-blue-200 rounded-full px-2.5 py-0.5">
