@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { postFeedback } from "../../../api/legalAI";
 import type {
   RecommendData,
   TokenCost,
   IASessionContext,
 } from "../../../types/ia";
+import RefineSection from "./RefineSection";
+import type { RefineHistoryItem } from "./RefineSection";
+import FeedbackModal from "./FeedbackModal";
 
-const COP_PER_USD = 3900;
-
-type FeedbackState = "idle" | "dislike-open" | "sent";
+const COP_PER_USD = 4200;
 
 interface ResultsStepProps {
   result: RecommendData;
@@ -29,15 +29,21 @@ function getRiskClass(nivel: string) {
 function CostGrid({
   ctxCost,
   recCost,
+  refineCosts,
 }: {
   ctxCost: TokenCost | null;
   recCost: TokenCost;
+  refineCosts: TokenCost[];
 }) {
+  const refineIn = refineCosts.reduce((s, c) => s + (c.input_tokens ?? 0), 0);
+  const refineOut = refineCosts.reduce((s, c) => s + (c.output_tokens ?? 0), 0);
+  const refineUSD = refineCosts.reduce((s, c) => s + (c.cost_usd ?? 0), 0);
+
   const totalIn =
-    (ctxCost?.input_tokens ?? 0) + (recCost.input_tokens ?? 0);
+    (ctxCost?.input_tokens ?? 0) + (recCost.input_tokens ?? 0) + refineIn;
   const totalOut =
-    (ctxCost?.output_tokens ?? 0) + (recCost.output_tokens ?? 0);
-  const totalUSD = (ctxCost?.cost_usd ?? 0) + (recCost.cost_usd ?? 0);
+    (ctxCost?.output_tokens ?? 0) + (recCost.output_tokens ?? 0) + refineOut;
+  const totalUSD = (ctxCost?.cost_usd ?? 0) + (recCost.cost_usd ?? 0) + refineUSD;
   const totalCOP = totalUSD * COP_PER_USD;
 
   const items = [
@@ -77,40 +83,15 @@ const ResultsStep: React.FC<ResultsStepProps> = ({
   onNewConsulta,
 }) => {
   const { info, cost: recCost, response_id } = result;
-  const [feedbackState, setFeedbackState] = useState<FeedbackState>("idle");
-  const [dislikeText, setDislikeText] = useState("");
-  const [fbError, setFbError] = useState("");
-  const [fbSuccess, setFbSuccess] = useState("");
-  const [fbLoading, setFbLoading] = useState(false);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackSent, setFeedbackSent] = useState(false);
+  const [refineHistorial, setRefineHistorial] = useState<RefineHistoryItem[]>([]);
+  const [refineLoading, setRefineLoading] = useState(false);
 
-  const handleFeedback = async (tipo: "like" | "dislike") => {
-    if (!response_id) return;
-    setFbLoading(true);
-    setFbError("");
-    setFbSuccess("");
+  const refineCosts = refineHistorial.map((item) => item.data.cost);
 
-    const payload = {
-      response_id,
-      tipo,
-      ...(tipo === "dislike" && dislikeText.trim()
-        ? { descripcion: dislikeText.trim() }
-        : {}),
-    };
-
-    const { error } = await postFeedback(payload);
-    setFbLoading(false);
-
-    if (error) {
-      setFbError(error);
-      return;
-    }
-
-    setFbSuccess(
-      tipo === "like"
-        ? "¡Gracias por tu valoración!"
-        : "Gracias, tu comentario fue registrado."
-    );
-    setFeedbackState("sent");
+  const handleRefineComplete = (item: RefineHistoryItem) => {
+    setRefineHistorial((prev) => [...prev, item]);
   };
 
   return (
@@ -266,83 +247,50 @@ const ResultsStep: React.FC<ResultsStepProps> = ({
         </div>
       )}
 
+      {/* Ajustes / Aclaraciones */}
+      <RefineSection
+        responseId={response_id}
+        onRefineComplete={handleRefineComplete}
+        historial={refineHistorial}
+        loading={refineLoading}
+        setLoading={setRefineLoading}
+      />
+
       {/* Feedback */}
       <div className="bg-white rounded-xl shadow-md p-6">
         <p className="text-xs font-bold uppercase tracking-wider text-customGray mb-3">
           ¿Fue útil esta recomendación?
         </p>
-        {feedbackState === "sent" ? (
+        {feedbackSent ? (
           <p className="text-sm bg-green-50 border border-green-300 text-green-700 rounded-lg px-3 py-2">
-            {fbSuccess}
+            ¡Gracias por tu valoración!
           </p>
         ) : (
-          <>
-            <div className="flex items-center gap-3 flex-wrap">
-              <button
-                onClick={() => handleFeedback("like")}
-                disabled={fbLoading}
-                className="border border-slate-300 rounded-lg px-4 py-2 text-sm flex items-center gap-1.5 hover:border-green-400 hover:bg-green-50 hover:text-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                👍 Me fue útil
-              </button>
-              <button
-                onClick={() =>
-                  setFeedbackState(
-                    feedbackState === "dislike-open" ? "idle" : "dislike-open"
-                  )
-                }
-                disabled={fbLoading}
-                className="border border-slate-300 rounded-lg px-4 py-2 text-sm flex items-center gap-1.5 hover:border-red-400 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                👎 Mejorar respuesta
-              </button>
-            </div>
-
-            {feedbackState === "dislike-open" && (
-              <div className="mt-3">
-                <textarea
-                  value={dislikeText}
-                  onChange={(e) => setDislikeText(e.target.value)}
-                  maxLength={1000}
-                  placeholder="¿Qué podría mejorarse? (opcional, máximo 1000 caracteres)"
-                  className="w-full min-h-[72px] resize-y border border-slate-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blueSecondary transition-colors"
-                />
-                <div className="flex items-center gap-3 mt-2">
-                  <button
-                    onClick={() => handleFeedback("dislike")}
-                    disabled={fbLoading}
-                    className="bg-bluePrimary text-white font-semibold rounded-lg px-4 py-1.5 text-sm hover:bg-blueTertiary transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  >
-                    {fbLoading ? "Enviando..." : "Enviar comentario"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setFeedbackState("idle");
-                      setDislikeText("");
-                    }}
-                    className="border border-blueSecondary text-blueSecondary rounded-lg px-4 py-1.5 text-sm font-semibold hover:bg-blueSecondary hover:text-white transition-colors"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {fbError && (
-              <p className="mt-3 text-sm bg-red-50 border border-red-300 text-red-600 rounded-lg px-3 py-2">
-                {fbError}
-              </p>
-            )}
-          </>
+          <button
+            onClick={() => setFeedbackModalOpen(true)}
+            className="border border-blueSecondary text-blueSecondary rounded-lg px-4 py-2 text-sm font-semibold flex items-center gap-2 hover:bg-blueSecondary hover:text-white transition-colors"
+          >
+            🗨️ Dar feedback
+          </button>
         )}
       </div>
+
+      <FeedbackModal
+        responseId={response_id}
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        onSuccess={() => {
+          setFeedbackModalOpen(false);
+          setFeedbackSent(true);
+        }}
+      />
 
       {/* Consumo de tokens */}
       <div className="bg-white rounded-xl shadow-md p-6">
         <p className="text-xs font-bold uppercase tracking-wider text-customGray mb-3">
           Consumo de tokens — esta consulta
         </p>
-        <CostGrid ctxCost={ctx.contextCost} recCost={recCost} />
+        <CostGrid ctxCost={ctx.contextCost} recCost={recCost} refineCosts={refineCosts} />
       </div>
 
       {/* Nueva consulta */}

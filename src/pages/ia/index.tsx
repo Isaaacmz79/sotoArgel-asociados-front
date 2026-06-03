@@ -4,14 +4,21 @@ import LoginIA from "../../components/sections/ia/LoginIA";
 import ConsultaStep from "../../components/sections/ia/ConsultaStep";
 import ContextStep from "../../components/sections/ia/ContextStep";
 import ResultsStep from "../../components/sections/ia/ResultsStep";
+import ResearchResultsStep from "../../components/sections/ia/ResearchResultsStep";
 import { Logo } from "../../components/branding/Logo";
-import type { IASessionContext, IAStep, RecommendData } from "../../types/ia";
+import type {
+  IASessionContext,
+  IAStep,
+  RecommendData,
+  ResearchData,
+} from "../../types/ia";
 
 const IAPage: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<IAStep>("login");
   const [ctx, setCtx] = useState<IASessionContext | null>(null);
   const [result, setResult] = useState<RecommendData | null>(null);
+  const [researchResult, setResearchResult] = useState<ResearchData | null>(null);
 
   // Verificar si ya hay sesión activa al cargar
   useEffect(() => {
@@ -34,9 +41,15 @@ const IAPage: React.FC = () => {
     setStep("results");
   };
 
+  const handleResearchSuccess = (data: ResearchData) => {
+    setResearchResult(data);
+    setStep("research-results");
+  };
+
   const handleNewConsulta = () => {
     setCtx(null);
     setResult(null);
+    setResearchResult(null);
     setStep("consulta");
   };
 
@@ -44,6 +57,7 @@ const IAPage: React.FC = () => {
     sessionStorage.removeItem("ia_auth");
     setCtx(null);
     setResult(null);
+    setResearchResult(null);
     setStep("login");
   };
 
@@ -92,7 +106,10 @@ const IAPage: React.FC = () => {
       {/* Contenido */}
       <main className="flex-1 max-w-3xl w-full mx-auto px-5 py-8 md:py-10">
         {step === "consulta" && (
-          <ConsultaStep onSuccess={handleContextSuccess} />
+          <ConsultaStep
+            onSuccess={handleContextSuccess}
+            onResearchSuccess={handleResearchSuccess}
+          />
         )}
 
         {step === "context" && ctx && (
@@ -107,6 +124,13 @@ const IAPage: React.FC = () => {
           <ResultsStep
             result={result}
             ctx={ctx}
+            onNewConsulta={handleNewConsulta}
+          />
+        )}
+
+        {step === "research-results" && researchResult && (
+          <ResearchResultsStep
+            result={researchResult}
             onNewConsulta={handleNewConsulta}
           />
         )}

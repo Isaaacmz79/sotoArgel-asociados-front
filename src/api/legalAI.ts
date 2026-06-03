@@ -4,6 +4,10 @@ import type {
   RecommendRequest,
   RecommendResponse,
   FeedbackRequest,
+  RefineRequest,
+  RefineResponse,
+  ResearchRequest,
+  ResearchResponse,
   AdminFeedback,
   AdminSession,
   AdminRecommendation,
@@ -23,6 +27,8 @@ const ENDPOINTS = {
   context: `${API_BASE}/v1/advisor/context`,
   recommend: `${API_BASE}/v1/advisor/recommend`,
   feedback: `${API_BASE}/v1/advisor/feedback`,
+  refine: `${API_BASE}/v1/advisor/refine`,
+  research: `${API_BASE}/v1/research/query`,
 } as const;
 
 // ── Error parser ──────────────────────────────────────────────────────────────
@@ -165,6 +171,68 @@ export async function postFeedback(
     return { error: null };
   } catch {
     return { error: "Error de red al enviar el feedback." };
+  }
+}
+
+// ── Refine ────────────────────────────────────────────────────────────────────
+
+export async function postRefine(
+  payload: RefineRequest
+): Promise<{ data: RefineResponse; error: null } | { data: null; error: string }> {
+  try {
+    const res = await fetch(ENDPOINTS.refine, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    let data: unknown = null;
+    try {
+      data = await res.json();
+    } catch (_) {
+      // no-op
+    }
+
+    const err = parseApiError(res, data);
+    if (err) return { data: null, error: err };
+
+    return { data: data as RefineResponse, error: null };
+  } catch {
+    return {
+      data: null,
+      error: "No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.",
+    };
+  }
+}
+
+// ── Research ──────────────────────────────────────────────────────────────────
+
+export async function postResearch(
+  payload: ResearchRequest
+): Promise<{ data: ResearchResponse; error: null } | { data: null; error: string }> {
+  try {
+    const res = await fetch(ENDPOINTS.research, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    let data: unknown = null;
+    try {
+      data = await res.json();
+    } catch (_) {
+      // no-op
+    }
+
+    const err = parseApiError(res, data);
+    if (err) return { data: null, error: err };
+
+    return { data: data as ResearchResponse, error: null };
+  } catch {
+    return {
+      data: null,
+      error: "No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.",
+    };
   }
 }
 

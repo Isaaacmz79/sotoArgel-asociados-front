@@ -34,6 +34,7 @@ const ContextStep: React.FC<ContextStepProps> = ({ ctx, onSuccess, onBack }) => 
     const payload = {
       consulta: ctx.consulta,
       session_id: ctx.sessionId,
+      fuente: ctx.fuente,
       ...(Object.keys(respuestasMap).length > 0 && {
         respuestas: respuestasMap,
       }),

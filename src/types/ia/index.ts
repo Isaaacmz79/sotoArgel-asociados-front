@@ -1,19 +1,81 @@
 // ── Requests ──────────────────────────────────────────────────────────────────
 
+export type FuenteConsulta = "pdf" | "gerencie" | "senado_cst" | "investigacion" | "mixto";
+
 export interface ContextRequest {
   consulta: string;
+  fuente: FuenteConsulta;
 }
 
 export interface RecommendRequest {
   consulta: string;
   session_id: string;
   respuestas?: Record<string, string>;
+  fuente: FuenteConsulta;
 }
 
 export interface FeedbackRequest {
   response_id: string;
   tipo: "like" | "dislike";
   descripcion?: string;
+}
+
+export interface RefineRequest {
+  response_id: string;
+  comentario: string;
+}
+
+// ── Refine response ───────────────────────────────────────────────────────────
+
+export interface RefineInfo {
+  resumen_ajuste: string;
+  recomendaciones: Recomendacion[];
+  calculos_prestaciones?: CalculoPrestacion[];
+  aclaracion: string;
+}
+
+export interface RefineData {
+  response_id: string;
+  iteracion: number;
+  max_iteraciones: number;
+  cost: TokenCost;
+  cost_acumulado: TokenCost;
+  info: RefineInfo;
+}
+
+export interface RefineResponse {
+  code: number;
+  messages: string;
+  data: RefineData;
+}
+
+// ── Research ──────────────────────────────────────────────────────────────────
+
+export interface ResearchRequest {
+  consulta: string;
+  sitios: Array<"gerencie" | "senado_cst">;
+}
+
+export interface Hallazgo {
+  titulo: string;
+  contenido: string;
+  fuente: string;
+}
+
+export interface ResearchData {
+  research_id: string;
+  consulta: string;
+  resumen: string;
+  hallazgos: Hallazgo[];
+  fuentes_consultadas: string[];
+  chunks_indexados: number;
+  cost: TokenCost;
+}
+
+export interface ResearchResponse {
+  code: number;
+  messages: string;
+  data?: ResearchData;
 }
 
 // ── API cost ──────────────────────────────────────────────────────────────────
@@ -81,7 +143,7 @@ export interface RecommendResponse {
 
 // ── IA Page state ─────────────────────────────────────────────────────────────
 
-export type IAStep = "login" | "consulta" | "context" | "results";
+export type IAStep = "login" | "consulta" | "context" | "results" | "research-results";
 
 export interface IASessionContext {
   consulta: string;
@@ -89,6 +151,7 @@ export interface IASessionContext {
   preguntas: string[];
   contextCost: TokenCost | null;
   skipQuestions: boolean;
+  fuente: FuenteConsulta;
 }
 
 // ── Admin types ───────────────────────────────────────────────────────────────
