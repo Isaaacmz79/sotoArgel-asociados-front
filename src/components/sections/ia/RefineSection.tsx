@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { postRefine } from "../../../api/legalAI";
-import type { RefineData, TokenCost } from "../../../types/ia";
+import type { RefineData } from "../../../types/ia";
 
 const MAX_ITERACIONES = 2;
 

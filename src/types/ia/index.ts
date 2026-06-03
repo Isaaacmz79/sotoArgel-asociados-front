@@ -81,9 +81,17 @@ export interface ResearchResponse {
 // ── API cost ──────────────────────────────────────────────────────────────────
 
 export interface TokenCost {
+  modelo?: string;
+  proveedor?: string;
+  total_tokens?: number;
   input_tokens: number;
   output_tokens: number;
+  cached_tokens?: number;
+  cache_creation_tokens?: number;
+  reasoning_tokens?: number;
   cost_usd: number;
+  duration_seconds?: number;
+  intentos?: number;
 }
 
 // ── Context response ──────────────────────────────────────────────────────────
